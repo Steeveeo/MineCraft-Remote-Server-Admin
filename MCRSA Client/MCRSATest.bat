@@ -1,0 +1,1 @@
+"C:\glassfish3\jdk\jre\bin\java.exe" -jar "MCRSAClient.jar"

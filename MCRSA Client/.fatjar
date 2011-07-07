@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Mon Jul 04 03:23:48 PDT 2011
+onejar.license.required=false
+manifest.classpath=./MCRSAClient.jar
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=C\:\\Users\\Steeveeo\\workspace\\MineCraft Remote Server Admin\\MCRSA Client\\MCRSA Client_fat.jar
+manifest.mergeall=true
+manifest.mainclass=steeveeo.MCRSAClient.MCRSAClient
+manifest.file=<createnew>
+jarname.isextern=true
+onejar.expand=
+excludes=
+includes=
