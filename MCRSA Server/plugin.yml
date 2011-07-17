@@ -1,4 +1,4 @@
 name: MineCraft Remote Server Admin
-main: steeveeo.MCRSAServer
+main: steeveeo.MCRSAServer.MCRSAServer
 version: 0.1
 load: startup

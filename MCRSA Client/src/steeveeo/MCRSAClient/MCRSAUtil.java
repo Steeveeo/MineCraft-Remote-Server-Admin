@@ -28,5 +28,18 @@ public class MCRSAUtil {
 	        return System.getProperty("user.home");
 	    return System.getProperty("user.dir");
 	}
+	
+	//Numeric Range Checker
+	public static boolean inRange(int check, int low, int high)
+	{
+		if(check >= low && check <= high)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
 }

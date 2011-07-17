@@ -14,7 +14,7 @@ public class MCRSAFileConfig {
         plugin = instance;
     }
 
-       public String directory = "plugins" + File.separator +"MCRSAServer";
+       public String directory = "plugins" + File.separator +"MineCraft Remote Server Admin";
        File file = new File(directory + File.separator + "config.yml");
 
 
@@ -49,7 +49,6 @@ public class MCRSAFileConfig {
         Configuration config = load();
         return config.getDouble(root, 0);
     }
-    @SuppressWarnings("unused")
     private int readInt(String root){
         Configuration config = load();
         return config.getInt(root, 0);
@@ -59,7 +58,6 @@ public class MCRSAFileConfig {
         Configuration config = load();
         return config.getKeys(root);
     }
-    @SuppressWarnings("unused")
     private String readString(String root){
         Configuration config = load();
         return config.getString(root);
@@ -81,6 +79,16 @@ public class MCRSAFileConfig {
         
         write(plugin.enabledstartup, true);
         
+        //Server Prefs
+        write("Server.Listen Port", 25566);
+        write("Server.Master Password Enabled", true);
+        write("Server.Master Password", "ChangeMe");
+        
+        //Connection stuff
+        write("Connections.Max Clients", 20);
+        write("Connections.Max Login Attempts", 5);
+        write("Connections.Ban Minutes on Max Attempts",5);
+        
         loadkeys();
         
         plugin.log.info("[MCRSA] Config File Generation Complete.");
@@ -88,5 +96,15 @@ public class MCRSAFileConfig {
     private void loadkeys()
     {
     	plugin.enabled = readBoolean(plugin.enabledstartup);
+    	
+        //Server Prefs
+        MCRSAServer.SERVER_PORT = readInt("Server.Listen Port");
+        MCRSAServer.MASTERPASS_ENABLED = readBoolean("Server.Master Password Enabled");
+        MCRSAServer.MASTERPASS = readString("Server.Master Password");
+        
+        //Connection stuff
+        MCRSAServer.MAX_CLIENTS = readInt("Connections.Max Clients");
+        MCRSAServer.MAX_ATTEMPTS_FOR_BAN = readInt("Connections.Max Login Attempts");
+        MCRSAServer.ATTEMPT_BAN_MINUTES = readInt("Connections.Ban Minutes on Max Attempts");
     }
 }

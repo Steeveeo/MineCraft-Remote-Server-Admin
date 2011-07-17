@@ -46,10 +46,11 @@ public class MCRSAClient extends JFrame implements ActionListener
 	MCRSAConfig config = new MCRSAConfig();
 	int MAX_LINES = Integer.parseInt(config.getProperty("MAX_LINES"));
 	int KEEPALIVE_INTERVAL = Integer.parseInt(config.getProperty("KEEPALIVE_INTERVAL"));
-	Boolean AUTORECONNECT = Boolean.parseBoolean(config.getProperty("AUTORECONNECT"));
+	boolean AUTORECONNECT = Boolean.parseBoolean(config.getProperty("AUTORECONNECT"));
 	
 	//Program Variables
 	MCRSALog LogDisplay = new MCRSALog(MAX_LINES);
+	boolean LogLinkBottom = true;
 
 	//Load Log Test
 	String preParse = "";
@@ -80,7 +81,7 @@ public class MCRSAClient extends JFrame implements ActionListener
 	private JScrollPane LogPane_All;
 	private JPanel Command_Panel;
 	private JTextField Command_Field;
-	private JButton Command_Submit;
+	private JButton Command_Submit, Log_Link;
 	//--Preferences Screen
 	private JFrame Pref_Frame;
 	private JPanel Pref_SettingsPanel;
@@ -240,16 +241,16 @@ public class MCRSAClient extends JFrame implements ActionListener
 		{
 			public void keyPressed(KeyEvent key)
 			{
+				//Dummy to shut this up
+			}
+			public void keyReleased(KeyEvent key)
+			{
 				if(key.getKeyCode() == KeyEvent.VK_ENTER)
 				{
 					sendCommand(Command_Field.getText());
 				}
 			}
-			public void keyReleased(KeyEvent e)
-			{
-				//Dummy to shut this up
-			}
-			public void keyTyped(KeyEvent e)
+			public void keyTyped(KeyEvent key)
 			{
 				//Dummy to shut this up
 			}
@@ -264,6 +265,16 @@ public class MCRSAClient extends JFrame implements ActionListener
 		Command_GridLayout.setConstraints(Command_Submit, Command_GridCons);
 		Command_Panel.add(Command_Submit);
 		Command_Submit.addActionListener(this);
+		
+		//Link log to bottom
+		Log_Link = new JButton("L");
+		Log_Link.setFont(FONT_TIMESBOLD);
+		Command_GridCons.anchor = GridBagConstraints.EAST;
+		Command_GridCons.gridwidth = GridBagConstraints.RELATIVE;
+		Command_GridCons.weightx = 0.0;
+		Command_GridLayout.setConstraints(Log_Link, Command_GridCons);
+		Command_Panel.add(Log_Link);
+		Log_Link.addActionListener(this);
 		
 		//Apply
 		contentPane.add(Command_Panel, BorderLayout.SOUTH);
@@ -460,14 +471,35 @@ public class MCRSAClient extends JFrame implements ActionListener
 		about.setResizable(false);
 		about.setLayout(new BorderLayout());
 		
+		//Text Panel
+		JPanel aboutTextContainer = new JPanel();
+		GridBagLayout aboutTextLayout = new GridBagLayout();
+		GridBagConstraints aboutTextCons = new GridBagConstraints();
+		aboutTextCons.fill = GridBagConstraints.BOTH;
+		aboutTextContainer.setLayout(aboutTextLayout);
+		
 		//Text
-		JLabel aboutLabel = new JLabel();
-		String showText = "";
-		showText += "Author: Steeveeo\n";
-		showText += "Version: " + VERSIONSTRING + "\n";
-		showText += "Last Release: <FILL OUT>";
-		aboutLabel.setText(showText);
-		about.add(aboutLabel, BorderLayout.CENTER);
+		JLabel aboutLabelAuth = new JLabel("Author: Steeveeo");
+		aboutTextCons.anchor = GridBagConstraints.WEST;
+		aboutTextCons.gridwidth = GridBagConstraints.REMAINDER;
+		aboutTextCons.weightx = 0.0;
+		aboutTextLayout.setConstraints(aboutLabelAuth, aboutTextCons);
+		aboutTextContainer.add(aboutLabelAuth);
+		JLabel aboutLabelVer = new JLabel("Version: " + VERSIONSTRING);
+		aboutTextCons.anchor = GridBagConstraints.WEST;
+		aboutTextCons.gridwidth = GridBagConstraints.REMAINDER;
+		aboutTextCons.weightx = 0.0;
+		aboutTextLayout.setConstraints(aboutLabelVer, aboutTextCons);
+		aboutTextContainer.add(aboutLabelVer);
+		JLabel aboutLabelRel = new JLabel("Last Release: <FILL OUT>");
+		aboutTextCons.anchor = GridBagConstraints.WEST;
+		aboutTextCons.gridwidth = GridBagConstraints.REMAINDER;
+		aboutTextCons.weightx = 0.0;
+		aboutTextLayout.setConstraints(aboutLabelRel, aboutTextCons);
+		aboutTextContainer.add(aboutLabelRel);
+		
+		//Apply
+		about.add(aboutTextContainer, BorderLayout.WEST);
 	}
 	
 	public void actionPerformed(ActionEvent event)
@@ -570,7 +602,7 @@ public class MCRSAClient extends JFrame implements ActionListener
 		LogDisplay_All.setText(LogDisplay.exportString('\n'));
 		
 		//Move Viewport (if scroll is at bottom)
-		if(LogPane_All.getViewport().getViewPosition().y < LogDisplay.size()*20)
+		if(MCRSAUtil.inRange(LogPane_All.getViewport().getViewPosition().y, LogDisplay.size()*19, LogDisplay.size()*20))
 		{
 			LogPane_All.getViewport().setViewPosition(new Point(0,LogDisplay.size()*20));
 		}
